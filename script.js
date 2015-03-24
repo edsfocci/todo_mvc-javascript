@@ -24,10 +24,15 @@ var addText = function(event) {
   form.appendChild(checkbox);
   form.appendChild(inputText);
 
-  var div = document.createElement("div");
-  div.appendChild(form);
+  var divTCW = document.createElement("div");
+  divTCW.setAttribute('class', "table-cell-wrapper");
+  divTCW.appendChild(form);
 
-  section.appendChild(div);
+  var divTW = document.createElement("div");
+  divTW.setAttribute('class', "table-wrapper");
+  divTW.appendChild(divTCW);
+
+  section.appendChild(divTW);
   
 /*  section.innerHTML = section.innerHTML +
     '<div><input type="checkbox" /><input class="todo-text" value="' +

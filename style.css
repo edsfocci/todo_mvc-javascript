@@ -18,20 +18,26 @@ h1 {
   background-color: white;
 }
 
-#todo-app header {
+#todo-app header, div.table-wrapper {
   border: 1px solid grey;
+  height: 60px;
+  width: 100%;
+  display: table;
+  vertical-align: middle;
+}
+
+.table-cell-wrapper {
+  display: table-cell;
+  vertical-align: middle;
 }
 
 #todo-app section {
   font-size: 25px;
 }
 
-#todo-app div {
-  border: 1px solid grey;
-}
-
 #todo-app footer {
   border: 1px solid grey;
+  height: 40px;
 }
 
 #new-todo-text {
