@@ -18,8 +18,9 @@ h1 {
   background-color: white;
 }
 
-#todo-app header, div.table-wrapper {
+#todo-app header, #todo-app footer, div.table-wrapper {
   border: 1px solid grey;
+  border-bottom: 0;
   height: 60px;
   width: 100%;
   display: table;
@@ -36,8 +37,27 @@ h1 {
 }
 
 #todo-app footer {
-  border: 1px solid grey;
+  border-bottom: 1px solid grey;
   height: 40px;
+  font-size: 14px;
+}
+
+#todo-app footer span.center {
+  position: absolute;
+  width: 550px;
+}
+
+#todo-app footer span.center a {
+  padding: 3px 7px;
+  margin: 0 5px;
+  text-decoration: none;
+  color: #707070;
+}
+
+#todo-app footer span:last-child {
+  float: right;
+  margin-right: 15px;
+  color: #707070;
 }
 
 #new-todo-text {
@@ -60,4 +80,5 @@ h1 {
 
 .active {
   border: 1px solid #e8a8a8;
+  border-radius: 3px;
 }
