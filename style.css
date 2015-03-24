@@ -1,0 +1,57 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+h1 {
+  margin: 0;
+  font-size: 100px;
+  text-align: center;
+  color: #e8d0d0;
+}
+
+#todo-app {
+  width: 550px;
+  margin: auto;
+  background-color: white;
+}
+
+#todo-app header {
+  border: 1px solid grey;
+}
+
+#todo-app section {
+  font-size: 25px;
+}
+
+#todo-app div {
+  border: 1px solid grey;
+}
+
+#todo-app footer {
+  border: 1px solid grey;
+}
+
+#new-todo-text {
+  border: none;
+  font-size: 25px;
+}
+
+.todo-text {
+  border: none;
+  font-size: 25px;
+}
+
+.todo-text:disabled {
+  background-color: white;
+}
+
+.center {
+  text-align: center;
+}
+
+.active {
+  border: 1px solid #e8a8a8;
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>VanillaJS • TodoMVC</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>todos</h1>
+  </header>
+
+  <article id="todo-app">
+    <header class="center">
+      <form id="new-todo-form">
+        <input type="checkbox" />
+        <input type="text" id="new-todo-text"
+          placeholder="What needs to be done?" />
+      </form>
+    </header>
+
+    <section id="section" class="center">
+    </section>
+
+    <footer class="center">
+      <a href="#" class="active">All</a>
+      <a href="#">Active</a>
+      <a href="#">Completed</a>
+      <span>Clear completed</span>
+    </footer>
+  </article>
+
+  <footer class="center">
+    <p>Double-click to edit a todo</p>
+    <p>Created by <a href="https://github.com/edsfocci">Ed Solis</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+  <!--script>
+    var addText = function(event) {
+      event.preventDefault();
+      console.log(event);
+    };
+
+    var newTodo = document.getElementById("new-todo");
+
+    if (newTodo.addEventListener) { 
+      // For all major browsers, except IE 8 and earlier
+      newTodo.addEventListener("submit", addText);
+    } else if (x.attachEvent) {
+      // For IE 8 and earlier versions
+      newTodo.attachEvent("onsubmit", addText);
+    }
+  </script-->
+</body>
+</html>
