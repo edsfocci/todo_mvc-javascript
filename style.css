@@ -36,6 +36,16 @@ h1 {
   font-size: 25px;
 }
 
+input[type=checkbox] {
+  float: left;
+  margin: 9px 13px;
+}
+
+input[type=text] {
+  border: none;
+  font-size: 25px;
+}
+
 #todo-app footer {
   border-bottom: 1px solid grey;
   height: 40px;
@@ -58,20 +68,6 @@ h1 {
   float: right;
   margin-right: 15px;
   color: #707070;
-}
-
-#new-todo-text {
-  border: none;
-  font-size: 25px;
-}
-
-.todo-text {
-  border: none;
-  font-size: 25px;
-}
-
-.todo-text:disabled {
-  background-color: white;
 }
 
 .center {

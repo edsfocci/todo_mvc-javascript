@@ -6,7 +6,6 @@ var addText = function(event) {
 
   var inputText = document.createElement("input");
   inputText.setAttribute('type', "text");
-  inputText.setAttribute('class', "todo-text");
   inputText.setAttribute('value', newTodoText.value);
   inputText.setAttribute('readonly', "readonly");
 
