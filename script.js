@@ -9,6 +9,12 @@ var addTodo = function(event) {
   inputText.setAttribute('value', newTodoText.value);
   inputText.style.display = "none";
 
+  if (inputText.addEventListener) {
+    inputText.addEventListener("blur", loseFocus);
+  } else if (inputText.attachEvent) {
+    inputText.attachEvent("onblur", loseFocus);
+  }
+
   var todoSpan = document.createElement("span");
   todoSpan.innerHTML = newTodoText.value;
 
@@ -20,10 +26,10 @@ var addTodo = function(event) {
 
   if (form.addEventListener) {
     form.addEventListener("dblclick", editTodo);
-    form.addEventListener("submit", saveChanges);
+    form.addEventListener("submit", submitInEditMode);
   } else if (form.attachEvent) {
     form.attachEvent("ondblclick", editTodo);
-    form.attachEvent("onsubmit", saveChanges);
+    form.attachEvent("onsubmit", submitInEditMode);
   }
 
   var divTW = document.createElement("div");
@@ -48,26 +54,33 @@ var editTodo = function(event) {
   inputText.style.display = "inline";
   this.appendChild(inputText);
   inputText.focus();
-}
+};
 
-var saveChanges = function(event) {
+var submitInEditMode = function(event) {
   event.preventDefault();
+  saveChanges(this);
+};
 
-  var inputText = this.removeChild(this.lastChild);
+var loseFocus = function() {
+  saveChanges(this.parentNode);
+};
+
+var saveChanges = function(form) {
+  var inputText = form.removeChild(form.lastChild);
   inputText.style.display = "none";
 
   var todoSpan = document.createElement("span");
   todoSpan.innerHTML = inputText.value;
 
-  this.appendChild(inputText);
-  this.appendChild(todoSpan);
+  form.appendChild(inputText);
+  form.appendChild(todoSpan);
 
-  if (this.addEventListener) {
-    this.addEventListener("dblclick", editTodo);
-  } else if (this.attachEvent) {
-    this.attachEvent("ondblclick", editTodo);
+  if (form.addEventListener) {
+    form.addEventListener("dblclick", editTodo);
+  } else if (form.attachEvent) {
+    form.attachEvent("ondblclick", editTodo);
   }
-}
+};
 
 var newTodoForm = document.getElementById("new-todo-form");
 var newTodoText = document.getElementById("new-todo-text");
