@@ -1,4 +1,4 @@
-var addText = function(event) {
+var addTodo = function(event) {
   event.preventDefault();
 
   var checkbox = document.createElement("input");
@@ -7,58 +7,74 @@ var addText = function(event) {
   var inputText = document.createElement("input");
   inputText.setAttribute('type', "text");
   inputText.setAttribute('value', newTodoText.value);
-  inputText.setAttribute('readonly', "readonly");
+  inputText.style.display = "none";
 
-  if (inputText.addEventListener) { 
-    // For all major browsers, except IE 8 and earlier
-    inputText.addEventListener("dblclick", editTodo);
-//    inputText.addEventListener("focus", function() { this.blur(); });
-  } else if (inputText.attachEvent) {
-    // For IE 8 and earlier versions
-    inputText.attachEvent("ondblclick", editTodo);
-//    inputText.attachEvent("onfocus", function() { this.blur(); });
-  }
+  var todoSpan = document.createElement("span");
+  todoSpan.innerHTML = newTodoText.value;
 
   var form = document.createElement("form");
+  form.setAttribute('class', "table-cell-wrapper");
   form.appendChild(checkbox);
   form.appendChild(inputText);
+  form.appendChild(todoSpan);
 
-  var divTCW = document.createElement("div");
-  divTCW.setAttribute('class', "table-cell-wrapper");
-  divTCW.appendChild(form);
+  if (form.addEventListener) {
+    form.addEventListener("dblclick", editTodo);
+    form.addEventListener("submit", saveChanges);
+  } else if (form.attachEvent) {
+    form.attachEvent("ondblclick", editTodo);
+    form.attachEvent("onsubmit", saveChanges);
+  }
 
   var divTW = document.createElement("div");
   divTW.setAttribute('class', "table-wrapper");
-  divTW.appendChild(divTCW);
+  divTW.appendChild(form);
 
   section.appendChild(divTW);
-  
-/*  section.innerHTML = section.innerHTML +
-    '<div><input type="checkbox" /><input class="todo-text" value="' +
-    newTodoText.value + '" disabled /></div>';*/
-    newTodoText.value = "";
+
+  newTodoText.value = "";
 };
 
 var editTodo = function(event) {
-/*  if (this.addEventListener) { 
-    // For all major browsers, except IE 8 and earlier
-    this.removeEventListener("focus", function() { this.blur(); });
-  } else if (this.attachEvent) {
-    // For IE 8 and earlier versions
-    this.detachEvent("onfocus", function() { this.blur(); });
+  if (this.removeEventListener) {
+    this.removeEventListener("dblclick", editTodo);
+  } else if (this.detachEvent) {
+    this.detachEvent("ondblclick", editTodo);
   }
-*/
-  this.readOnly = false;
+
+  this.removeChild(this.lastChild);
+  var inputText = this.removeChild(this.lastChild);
+
+  inputText.style.display = "inline";
+  this.appendChild(inputText);
+  inputText.focus();
+}
+
+var saveChanges = function(event) {
+  event.preventDefault();
+
+  var inputText = this.removeChild(this.lastChild);
+  inputText.style.display = "none";
+
+  var todoSpan = document.createElement("span");
+  todoSpan.innerHTML = inputText.value;
+
+  this.appendChild(inputText);
+  this.appendChild(todoSpan);
+
+  if (this.addEventListener) {
+    this.addEventListener("dblclick", editTodo);
+  } else if (this.attachEvent) {
+    this.attachEvent("ondblclick", editTodo);
+  }
 }
 
 var newTodoForm = document.getElementById("new-todo-form");
 var newTodoText = document.getElementById("new-todo-text");
 var section = document.getElementById("section");
 
-if (newTodoForm.addEventListener) { 
-  // For all major browsers, except IE 8 and earlier
-  newTodoForm.addEventListener("submit", addText);
+if (newTodoForm.addEventListener) {
+  newTodoForm.addEventListener("submit", addTodo);
 } else if (newTodoForm.attachEvent) {
-  // For IE 8 and earlier versions
-  newTodoForm.attachEvent("onsubmit", addText);
+  newTodoForm.attachEvent("onsubmit", addTodo);
 }

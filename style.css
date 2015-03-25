@@ -36,6 +36,11 @@ h1 {
   font-size: 25px;
 }
 
+#todo-app section div div form {
+#  display: table-cell;
+#  vertical-align: middle;
+}
+
 input[type=checkbox] {
   float: left;
   margin: 9px 13px;
