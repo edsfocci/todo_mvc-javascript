@@ -8,6 +8,8 @@ var start = function() {
     todo = todos[idx];
     addTodoDiv(todo.text, todo.isCompleted, idx);
   }
+
+  updateFooter();
 };
 
 var submitNewTodo = function(event) {
@@ -33,7 +35,8 @@ var addTodoDiv = function(todoText, isCompleted, index) {
 
   var checkbox = document.createElement("input");
   checkbox.setAttribute('type', "checkbox");
-  if (isCompleted) checkbox.setAttribute('checked', "checked");
+
+  addEvent(checkbox, "change", toggleCompletedState);
 
   var inputText = document.createElement("input");
   inputText.setAttribute('type', "text");
@@ -44,6 +47,11 @@ var addTodoDiv = function(todoText, isCompleted, index) {
 
   var todoSpan = document.createElement("span");
   todoSpan.innerHTML = todoText;
+
+  if (isCompleted) {
+    checkbox.setAttribute('checked', "checked");
+    todoSpan.className = "completed";
+  }
 
   var deleteSpan = document.createElement("span");
   deleteSpan.setAttribute('class', "delete");
@@ -71,6 +79,23 @@ var addTodoDiv = function(todoText, isCompleted, index) {
   var section = document.getElementById("section");
   section.appendChild(divTableWrapper);
 };
+
+var toggleCompletedState = function() {
+  var index = this.parentNode.firstChild.innerHTML;
+  var todoText = this.parentNode.children[3];
+
+  var todos = localGetTodos();
+  todos[index].isCompleted = !todos[index].isCompleted;
+  if (todos[index].isCompleted) {
+    todoText.className = "completed";
+  } else {
+    todoText.className = "";
+  }
+
+  localSetTodos(todos);
+
+  updateFooter();
+}
 
 var showDeleteSpan = function() {
   var deleteSpan = this.lastChild;
@@ -155,6 +180,31 @@ var localSetTodos = function(todosArray) {
 var localGetTodos = function() {
   if (typeof(Storage) !== "undefined") {
     return JSON.parse(localStorage.getItem("todosArray"));
+  }
+};
+
+var updateFooter = function() {
+  var itemCountSpan = document.getElementById("item-count");
+  var clearCompletedSpan = document.getElementById("clear-completed");
+  var todos = localGetTodos() || [];
+  var completedCount = 0;
+
+  for (var i = 0; i < todos.length; i++) {
+    var todo = todos[i];
+    if (todo.isCompleted === true) completedCount++;
+  }
+
+  if (completedCount === 0) {
+    clearCompletedSpan.style.display = "none";
+  } else {
+    clearCompletedSpan.style.display = "inline";
+  }
+
+  var itemCount = (todos.length - completedCount);
+  if (itemCount === 1) {
+    itemCountSpan.innerHTML = itemCount.toString() + " item left";
+  } else {
+    itemCountSpan.innerHTML = itemCount.toString() + " items left";
   }
 };
 

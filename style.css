@@ -50,6 +50,11 @@ input[type=text] {
   font-size: 25px;
 }
 
+.completed {
+  text-decoration: line-through;
+  color: #cccccc;
+}
+
 .delete {
   float: right;
   margin-right: 10px;
@@ -61,9 +66,16 @@ input[type=text] {
   border-bottom: 1px solid grey;
   height: 40px;
   font-size: 14px;
+  color: #707070;
+}
+
+#todo-app footer span#item-count {
+  float: left;
+  margin-left: 15px;
 }
 
 #todo-app footer span.center {
+  display: block;
   position: absolute;
   width: 550px;
 }
@@ -75,17 +87,17 @@ input[type=text] {
   color: #707070;
 }
 
-#todo-app footer span:last-child {
+.active {
+  border: 1px solid #e8a8a8;
+  border-radius: 3px;
+}
+
+#todo-app footer span#clear-completed {
   float: right;
   margin-right: 15px;
-  color: #707070;
 }
 
 .center {
   text-align: center;
 }
 
-.active {
-  border: 1px solid #e8a8a8;
-  border-radius: 3px;
-}
