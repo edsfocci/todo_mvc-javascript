@@ -25,6 +25,7 @@ var submitNewTodo = function(event) {
     localSetTodos(todos);
 
     newTodoText.value = "";
+    updateFooter();
   }
 }
 
@@ -165,9 +166,13 @@ var deleteTodo = function() {
   var newTodos = [];
 
   for (var i = 0; i < index; i++) newTodos.push(todos[i]);
-  for (var i = index+1; i < todos.length; i++) newTodos.push(todos[i]);
+  for (var i = index+1; i < todos.length; i++) {
+    newTodos.push(todos[i]);
+    section.children[i-1].children[0].children[0].innerHTML = (i-1);
+  }
 
   localSetTodos(newTodos);
+  updateFooter();
 };
 
 var localSetTodos = function(todosArray) {
