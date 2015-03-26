@@ -1,50 +1,68 @@
-var addEvent = function(element, event, listener, useCapture) {
-  var capture = useCapture || false;
+var start = function() {
+  var newTodoForm = document.getElementById("new-todo-form");
+  addEvent(newTodoForm, "submit", submitNewTodo);
 
-  if (element.addEventListener) {
-    element.addEventListener(event, listener, useCapture);
-  } else if (element.attachEvent) {
-    element.attachEvent("on" + event, listener);
+  var todos = localGetTodos() || [];
+  var todo;
+  for (var idx = 0; idx < todos.length; idx++) {
+    todo = todos[idx];
+    addTodoDiv(todo.text, todo.isCompleted, idx);
   }
 };
 
-var removeEvent = function(element, event, listener, useCapture) {
-  var capture = useCapture || false;
-
-  if (element.removeEventListener) {
-    element.removeEventListener(event, listener, useCapture);
-  } else if (element.detachEvent) {
-    element.detachEvent("on" + event, listener);
-  }
-};
-
-var addTodo = function(event) {
+var submitNewTodo = function(event) {
   event.preventDefault();
 
   var newTodoText = document.getElementById("new-todo-text");
-  if (newTodoText.value === "") return;
+  if (newTodoText.value !== "") {
+    var todos = localGetTodos() || [];
+
+    addTodoDiv(newTodoText.value, false, todos.length);
+
+    todos.push({ text: newTodoText.value, isCompleted: false });
+    localSetTodos(todos);
+
+    newTodoText.value = "";
+  }
+}
+
+var addTodoDiv = function(todoText, isCompleted, index) {
+  var hiddenSpan = document.createElement("span");
+  hiddenSpan.setAttribute('class', "hidden");
+  hiddenSpan.innerHTML = index;
 
   var checkbox = document.createElement("input");
   checkbox.setAttribute('type', "checkbox");
+  if (isCompleted) checkbox.setAttribute('checked', "checked");
 
   var inputText = document.createElement("input");
   inputText.setAttribute('type', "text");
-  inputText.setAttribute('value', newTodoText.value);
+  inputText.setAttribute('value', todoText);
   inputText.style.display = "none";
 
   addEvent(inputText, "blur", loseFocus);
 
   var todoSpan = document.createElement("span");
-  todoSpan.innerHTML = newTodoText.value;
+  todoSpan.innerHTML = todoText;
+
+  var deleteSpan = document.createElement("span");
+  deleteSpan.setAttribute('class', "delete");
+  deleteSpan.innerHTML = "✖";
+
+  addEvent(deleteSpan, "click", deleteTodo);
 
   var form = document.createElement("form");
   form.setAttribute('class', "table-cell-wrapper");
+  form.appendChild(hiddenSpan);
   form.appendChild(checkbox);
   form.appendChild(inputText);
   form.appendChild(todoSpan);
+  form.appendChild(deleteSpan);
 
   addEvent(form, "dblclick", editTodo);
   addEvent(form, "submit", submitInEditMode);
+  addEvent(form, "mouseover", showDeleteSpan);
+  addEvent(form, "mouseout", hideDeleteSpan);
 
   var divTableWrapper = document.createElement("div");
   divTableWrapper.setAttribute('class', "table-wrapper");
@@ -52,13 +70,26 @@ var addTodo = function(event) {
 
   var section = document.getElementById("section");
   section.appendChild(divTableWrapper);
+};
 
-  newTodoText.value = "";
+var showDeleteSpan = function() {
+  var deleteSpan = this.lastChild;
+  if (deleteSpan.innerHTML === "✖") {
+    deleteSpan.style.display = "inline";
+  }
+};
+
+var hideDeleteSpan = function() {
+  var deleteSpan = this.lastChild;
+  if (deleteSpan.innerHTML === "✖") {
+    deleteSpan.style.display = "none";
+  }
 };
 
 var editTodo = function(event) {
   removeEvent(this, "dblclick", editTodo);
 
+  this.removeChild(this.lastChild);
   this.removeChild(this.lastChild);
   var inputText = this.removeChild(this.lastChild);
 
@@ -83,11 +114,71 @@ var saveChanges = function(form) {
   var todoSpan = document.createElement("span");
   todoSpan.innerHTML = inputText.value;
 
+  var deleteSpan = document.createElement("span");
+  deleteSpan.setAttribute('class', "delete");
+  deleteSpan.innerHTML = "✖";
+
+  addEvent(deleteSpan, "click", deleteTodo);
+
   form.appendChild(inputText);
   form.appendChild(todoSpan);
+  form.appendChild(deleteSpan);
 
   addEvent(form, "dblclick", editTodo);
 };
 
-addEvent(document.getElementById("new-todo-form"), "submit", addTodo);
+var deleteTodo = function() {
+  var form = this.parentNode;
+  var index = parseInt(form.removeChild(form.firstChild).innerHTML);
+  while(form.firstChild) form.removeChild(form.firstChild);
+
+  var containingDiv = form.parentNode;
+  containingDiv.removeChild(form);
+  var section = containingDiv.parentNode;
+  section.removeChild(containingDiv);
+
+  var todos = localGetTodos();
+  var newTodos = [];
+
+  for (var i = 0; i < index; i++) newTodos.push(todos[i]);
+  for (var i = index+1; i < todos.length; i++) newTodos.push(todos[i]);
+
+  localSetTodos(newTodos);
+};
+
+var localSetTodos = function(todosArray) {
+  if (typeof(Storage) !== "undefined") {
+    return localStorage.setItem("todosArray", JSON.stringify(todosArray));
+  }
+};
+
+var localGetTodos = function() {
+  if (typeof(Storage) !== "undefined") {
+    return JSON.parse(localStorage.getItem("todosArray"));
+  }
+};
+
+// Generic helper functions
+
+var addEvent = function(element, event, listener, useCapture) {
+  var capture = useCapture || false;
+
+  if (element.addEventListener) {
+    element.addEventListener(event, listener, useCapture);
+  } else if (element.attachEvent) {
+    element.attachEvent("on" + event, listener);
+  }
+};
+
+var removeEvent = function(element, event, listener, useCapture) {
+  var capture = useCapture || false;
+
+  if (element.removeEventListener) {
+    element.removeEventListener(event, listener, useCapture);
+  } else if (element.detachEvent) {
+    element.detachEvent("on" + event, listener);
+  }
+};
+
+start();
 

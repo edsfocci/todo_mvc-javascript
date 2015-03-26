@@ -36,9 +36,8 @@ h1 {
   font-size: 25px;
 }
 
-#todo-app section div div form {
-#  display: table-cell;
-#  vertical-align: middle;
+.hidden {
+  display: none;
 }
 
 input[type=checkbox] {
@@ -49,6 +48,13 @@ input[type=checkbox] {
 input[type=text] {
   border: none;
   font-size: 25px;
+}
+
+.delete {
+  float: right;
+  margin-right: 10px;
+  color: #e88080;
+  display: none;
 }
 
 #todo-app footer {
