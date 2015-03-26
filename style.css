@@ -48,6 +48,7 @@ input[type=checkbox] {
 input[type=text] {
   border: none;
   font-size: 25px;
+  width: 500px;
 }
 
 .completed {

@@ -99,27 +99,27 @@ var toggleCompletedState = function() {
 
 var showDeleteSpan = function() {
   var deleteSpan = this.lastChild;
-  if (deleteSpan.innerHTML === "✖") {
+  if (this.className === "table-cell-wrapper edit-mode") {
+    deleteSpan.style.display = "none";
+  } else {
     deleteSpan.style.display = "inline";
   }
 };
 
 var hideDeleteSpan = function() {
   var deleteSpan = this.lastChild;
-  if (deleteSpan.innerHTML === "✖") {
-    deleteSpan.style.display = "none";
-  }
+  deleteSpan.style.display = "none";
 };
 
 var editTodo = function(event) {
   removeEvent(this, "dblclick", editTodo);
 
-  this.removeChild(this.lastChild);
-  this.removeChild(this.lastChild);
-  var inputText = this.removeChild(this.lastChild);
+  this.children[4].style.display = "none";
+  this.children[3].style.display = "none";
+  var inputText = this.children[2];
 
   inputText.style.display = "inline";
-  this.appendChild(inputText);
+  this.className = this.className + " edit-mode";
   inputText.focus();
 };
 
@@ -133,7 +133,7 @@ var loseFocus = function() {
 };
 
 var saveChanges = function(form) {
-  var inputText = form.removeChild(form.lastChild);
+  var inputText = form.children[2]
   inputText.style.display = "none";
 
   var index = form.firstChild.innerHTML;
@@ -141,20 +141,14 @@ var saveChanges = function(form) {
   todos[index].text = inputText.value;
   localSetTodos(todos);
 
-  var todoSpan = document.createElement("span");
+  form.children[4].style.display = "inline";
+
+  var todoSpan =  form.children[3]
   todoSpan.innerHTML = inputText.value;
-
-  var deleteSpan = document.createElement("span");
-  deleteSpan.setAttribute('class', "delete");
-  deleteSpan.innerHTML = "✖";
-
-  addEvent(deleteSpan, "click", deleteTodo);
-
-  form.appendChild(inputText);
-  form.appendChild(todoSpan);
-  form.appendChild(deleteSpan);
+  todoSpan.style.display = "inline";
 
   addEvent(form, "dblclick", editTodo);
+  form.className = "table-cell-wrapper";
 };
 
 var deleteTodo = function() {
