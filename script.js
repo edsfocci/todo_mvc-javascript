@@ -136,6 +136,11 @@ var saveChanges = function(form) {
   var inputText = form.removeChild(form.lastChild);
   inputText.style.display = "none";
 
+  var index = form.firstChild.innerHTML;
+  var todos = localGetTodos();
+  todos[index].text = inputText.value;
+  localSetTodos(todos);
+
   var todoSpan = document.createElement("span");
   todoSpan.innerHTML = inputText.value;
 
