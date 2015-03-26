@@ -1,5 +1,28 @@
+var addEvent = function(element, event, listener, useCapture) {
+  var capture = useCapture || false;
+
+  if (element.addEventListener) {
+    element.addEventListener(event, listener, useCapture);
+  } else if (element.attachEvent) {
+    element.attachEvent("on" + event, listener);
+  }
+};
+
+var removeEvent = function(element, event, listener, useCapture) {
+  var capture = useCapture || false;
+
+  if (element.removeEventListener) {
+    element.removeEventListener(event, listener, useCapture);
+  } else if (element.detachEvent) {
+    element.detachEvent("on" + event, listener);
+  }
+};
+
 var addTodo = function(event) {
   event.preventDefault();
+
+  var newTodoText = document.getElementById("new-todo-text");
+  if (newTodoText.value === "") return;
 
   var checkbox = document.createElement("input");
   checkbox.setAttribute('type', "checkbox");
@@ -9,11 +32,7 @@ var addTodo = function(event) {
   inputText.setAttribute('value', newTodoText.value);
   inputText.style.display = "none";
 
-  if (inputText.addEventListener) {
-    inputText.addEventListener("blur", loseFocus);
-  } else if (inputText.attachEvent) {
-    inputText.attachEvent("onblur", loseFocus);
-  }
+  addEvent(inputText, "blur", loseFocus);
 
   var todoSpan = document.createElement("span");
   todoSpan.innerHTML = newTodoText.value;
@@ -24,29 +43,21 @@ var addTodo = function(event) {
   form.appendChild(inputText);
   form.appendChild(todoSpan);
 
-  if (form.addEventListener) {
-    form.addEventListener("dblclick", editTodo);
-    form.addEventListener("submit", submitInEditMode);
-  } else if (form.attachEvent) {
-    form.attachEvent("ondblclick", editTodo);
-    form.attachEvent("onsubmit", submitInEditMode);
-  }
+  addEvent(form, "dblclick", editTodo);
+  addEvent(form, "submit", submitInEditMode);
 
-  var divTW = document.createElement("div");
-  divTW.setAttribute('class', "table-wrapper");
-  divTW.appendChild(form);
+  var divTableWrapper = document.createElement("div");
+  divTableWrapper.setAttribute('class', "table-wrapper");
+  divTableWrapper.appendChild(form);
 
-  section.appendChild(divTW);
+  var section = document.getElementById("section");
+  section.appendChild(divTableWrapper);
 
   newTodoText.value = "";
 };
 
 var editTodo = function(event) {
-  if (this.removeEventListener) {
-    this.removeEventListener("dblclick", editTodo);
-  } else if (this.detachEvent) {
-    this.detachEvent("ondblclick", editTodo);
-  }
+  removeEvent(this, "dblclick", editTodo);
 
   this.removeChild(this.lastChild);
   var inputText = this.removeChild(this.lastChild);
@@ -75,19 +86,8 @@ var saveChanges = function(form) {
   form.appendChild(inputText);
   form.appendChild(todoSpan);
 
-  if (form.addEventListener) {
-    form.addEventListener("dblclick", editTodo);
-  } else if (form.attachEvent) {
-    form.attachEvent("ondblclick", editTodo);
-  }
+  addEvent(form, "dblclick", editTodo);
 };
 
-var newTodoForm = document.getElementById("new-todo-form");
-var newTodoText = document.getElementById("new-todo-text");
-var section = document.getElementById("section");
+addEvent(document.getElementById("new-todo-form"), "submit", addTodo);
 
-if (newTodoForm.addEventListener) {
-  newTodoForm.addEventListener("submit", addTodo);
-} else if (newTodoForm.attachEvent) {
-  newTodoForm.attachEvent("onsubmit", addTodo);
-}
