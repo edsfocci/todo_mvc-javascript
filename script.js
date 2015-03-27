@@ -2,8 +2,17 @@ var start = function() {
   var newTodoForm = document.getElementById("new-todo-form");
   addEvent(newTodoForm, "submit", submitNewTodo);
 
-  var clearCompletedSpan = document.getElementById("clear-completed");
-  addEvent(clearCompletedSpan, "click", deleteCompleted);
+  var showAllLink = document.getElementById("show-all");
+  addEvent(showAllLink, "click", showAll);
+
+  var showActiveLink = document.getElementById("show-active");
+  addEvent(showActiveLink, "click", showActive);
+
+  var showCompletedLink = document.getElementById("show-completed");
+  addEvent(showCompletedLink, "click", showCompleted);
+
+  var clearCompletedLink = document.getElementById("clear-completed");
+  addEvent(clearCompletedLink, "click", deleteCompleted);
 
   var todos = localGetTodos() || [];
   var todo;
@@ -216,7 +225,7 @@ var localDeleteTodo = function(idx) {
   }
 
   localSetTodos(newTodos);
-}
+};
 
 var updateFooter = function() {
   var itemCountSpan = document.getElementById("item-count");
@@ -241,6 +250,15 @@ var updateFooter = function() {
   } else {
     itemCountSpan.innerHTML = itemCount.toString() + " items left";
   }
+};
+
+var showAll = function() {
+};
+
+var showActive = function() {
+};
+
+var showCompleted = function() {
 };
 
 // Generic helper functions

@@ -61,6 +61,7 @@ input[type=text] {
   margin-right: 10px;
   color: #e88080;
   display: none;
+  cursor: pointer;
 }
 
 #todo-app footer {
@@ -95,6 +96,10 @@ input[type=text] {
   margin: 0 5px;
   text-decoration: none;
   color: #707070;
+}
+
+a {
+  cursor: pointer;
 }
 
 .active {
