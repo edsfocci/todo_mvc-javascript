@@ -70,18 +70,27 @@ input[type=text] {
   color: #707070;
 }
 
-#todo-app footer span#item-count {
+.footer-left {
   float: left;
-  margin-left: 15px;
+  width: 135px;
+  line-height: 40px;
+  padding-left: 15px;
 }
 
-#todo-app footer span.center {
-  display: block;
-  position: absolute;
-  width: 550px;
+.footer-center {
+  float: left;
+  width: 250px;
+  line-height: 40px;
 }
 
-#todo-app footer span.center a {
+.footer-right {
+  float: right;
+  line-height: 40px;
+  text-align: right;
+  margin-right: 15px;
+}
+
+#todo-app footer span.footer-center a {
   padding: 3px 7px;
   margin: 0 5px;
   text-decoration: none;
@@ -91,11 +100,6 @@ input[type=text] {
 .active {
   border: 1px solid #e8a8a8;
   border-radius: 3px;
-}
-
-#todo-app footer span#clear-completed {
-  float: right;
-  margin-right: 15px;
 }
 
 .center {

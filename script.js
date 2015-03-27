@@ -2,6 +2,9 @@ var start = function() {
   var newTodoForm = document.getElementById("new-todo-form");
   addEvent(newTodoForm, "submit", submitNewTodo);
 
+  var clearCompletedSpan = document.getElementById("clear-completed");
+  addEvent(clearCompletedSpan, "click", deleteCompleted);
+
   var todos = localGetTodos() || [];
   var todo;
   for (var idx = 0; idx < todos.length; idx++) {
@@ -58,7 +61,7 @@ var addTodoDiv = function(todoText, isCompleted, index) {
   deleteSpan.setAttribute('class', "delete");
   deleteSpan.innerHTML = "✖";
 
-  addEvent(deleteSpan, "click", deleteTodo);
+  addEvent(deleteSpan, "click", submitDelete);
 
   var form = document.createElement("form");
   form.setAttribute('class', "table-cell-wrapper");
@@ -152,15 +155,10 @@ var saveChanges = function(form) {
   form.className = "table-cell-wrapper";
 };
 
-var deleteTodo = function() {
-  var form = this.parentNode;
-  var index = parseInt(form.removeChild(form.firstChild).innerHTML);
-  while(form.firstChild) form.removeChild(form.firstChild);
+var submitDelete = function() {
+  var index = parseInt(this.parentNode.firstChild.innerHTML);
 
-  var containingDiv = form.parentNode;
-  containingDiv.removeChild(form);
-  var section = containingDiv.parentNode;
-  section.removeChild(containingDiv);
+  deleteTodoDiv(index);
 
   var todos = localGetTodos();
   var newTodos = [];
@@ -173,6 +171,28 @@ var deleteTodo = function() {
 
   localSetTodos(newTodos);
   updateFooter();
+};
+
+var deleteTodoDiv = function(index) {
+  var section = document.getElementById("section");
+  var containingDiv = section.children[index];
+  var form = containingDiv.children[0];
+
+  while(form.firstChild) form.removeChild(form.firstChild);
+  containingDiv.removeChild(form);
+  section.removeChild(containingDiv);
+};
+
+var deleteCompleted = function() {
+  console.log(this);
+  var section = document.getElementById("section");
+  var todos = localGetTodos();
+
+  for (var i = 0; i < todos.length; i++) {
+    if (todos[i].isCompleted) {
+      deleteTodoDiv(i);
+    }
+  }
 };
 
 var localSetTodos = function(todosArray) {
