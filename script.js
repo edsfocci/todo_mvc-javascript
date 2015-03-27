@@ -321,17 +321,7 @@ var dragDrop = function(event) {
 
   var sourceIndex = event.dataTransfer.getData("index");
   var destIndex = this.children[0].children[0].innerHTML;
-/*
-  var sourceText = todos[sourceIndex].text;
-  var destText = todos[destIndex].text;
-  var source = document.getElementById("section").children[sourceIndex];
 
-  source.children[0].children[2].setAttribute('value', destText);
-  source.children[0].children[3].innerHTML = destText;
-
-  this.children[0].children[2].setAttribute('value', sourceText);
-  this.children[0].children[3].innerHTML = sourceText;
-*/
   sourceTodo = todos[sourceIndex];
   todos[sourceIndex] = todos[destIndex];
   todos[destIndex] = sourceTodo;
