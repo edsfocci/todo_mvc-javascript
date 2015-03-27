@@ -7,14 +7,18 @@ body {
 
 h1 {
   margin: 0;
+  line-height: 135px;
   font-size: 100px;
+  font-weight: normal;
   text-align: center;
-  color: #e8d0d0;
+#  color: #e8d0d0;
+  color:#e8b8b8;
 }
 
 #todo-app {
   width: 550px;
   margin: auto;
+  margin-top: -5px;
   background-color: white;
 }
 

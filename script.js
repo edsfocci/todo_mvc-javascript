@@ -87,6 +87,12 @@ var addTodoDiv = function(todoText, isCompleted, index) {
 
   var divTableWrapper = document.createElement("div");
   divTableWrapper.setAttribute('class', "table-wrapper");
+  divTableWrapper.setAttribute('draggable', "true");
+
+  addEvent(divTableWrapper, "dragstart", dragStart);
+  addEvent(divTableWrapper, "dragover", dragOver);
+  addEvent(divTableWrapper, "drop", dragDrop);
+
   divTableWrapper.appendChild(form);
 
   var section = document.getElementById("section");
@@ -296,6 +302,63 @@ var showCompleted = function() {
   document.getElementById("show-all").className = "";
   document.getElementById("show-active").className = "";
   document.getElementById("show-completed").className = "active";
+};
+
+var dragStart = function(event) {
+  event.dataTransfer.setData("index", this.children[0].children[0].innerHTML);
+  event.dataTransfer.effectAllowed = "move";
+};
+
+var dragOver = function(event) {
+  event.preventDefault();
+  event.dataTransfer.dropEffect = "move";
+};
+
+var dragDrop = function(event) {
+  event.preventDefault();
+
+  var todos = localGetTodos();
+
+  var sourceIndex = event.dataTransfer.getData("index");
+  var destIndex = this.children[0].children[0].innerHTML;
+/*
+  var sourceText = todos[sourceIndex].text;
+  var destText = todos[destIndex].text;
+  var source = document.getElementById("section").children[sourceIndex];
+
+  source.children[0].children[2].setAttribute('value', destText);
+  source.children[0].children[3].innerHTML = destText;
+
+  this.children[0].children[2].setAttribute('value', sourceText);
+  this.children[0].children[3].innerHTML = sourceText;
+*/
+  sourceTodo = todos[sourceIndex];
+  todos[sourceIndex] = todos[destIndex];
+  todos[destIndex] = sourceTodo;
+
+  localSetTodos(todos);
+
+  updateTodoDiv(sourceIndex);
+  updateTodoDiv(destIndex);
+};
+
+var updateTodoDiv = function(index) {
+  var todos = localGetTodos();
+  var todoText = todos[index].text;
+
+  var form = document.getElementById("section").children[index].children[0];
+  var checkbox = form.children[1];
+  var inputText = form.children[2];
+  var spanText = form.children[3];
+
+  checkbox.checked = todos[index].isCompleted;
+  inputText.setAttribute('value', todoText);
+  spanText.innerHTML = todoText;
+  if (todos[index].isCompleted){
+    spanText.className = "completed";
+  } else {
+    spanText.className = "";
+  }
 };
 
 // Generic helper functions
