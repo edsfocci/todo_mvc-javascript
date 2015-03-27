@@ -253,12 +253,49 @@ var updateFooter = function() {
 };
 
 var showAll = function() {
+  var section = document.getElementById("section");
+  var todos = localGetTodos() || [];
+
+  for (var i = 0; i < todos.length; i++)
+  {
+    section.children[i].style.display = "table";
+  }
+
+  document.getElementById("show-all").className = "active";
+  document.getElementById("show-active").className = "";
+  document.getElementById("show-completed").className = "";
 };
 
 var showActive = function() {
+  var section = document.getElementById("section");
+  var todos = localGetTodos() || [];
+
+  for (var i = 0; i < todos.length; i++)
+    if (todos[i].isCompleted) {
+      section.children[i].style.display = "none";
+    } else {
+      section.children[i].style.display = "table";
+    }
+
+  document.getElementById("show-all").className = "";
+  document.getElementById("show-active").className = "active";
+  document.getElementById("show-completed").className = "";
 };
 
 var showCompleted = function() {
+  var section = document.getElementById("section");
+  var todos = localGetTodos() || [];
+
+  for (var i = 0; i < todos.length; i++)
+    if (todos[i].isCompleted) {
+      section.children[i].style.display = "table";
+    } else {
+      section.children[i].style.display = "none";
+    }
+
+  document.getElementById("show-all").className = "";
+  document.getElementById("show-active").className = "";
+  document.getElementById("show-completed").className = "active";
 };
 
 // Generic helper functions
