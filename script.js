@@ -159,21 +159,12 @@ var submitDelete = function() {
   var index = parseInt(this.parentNode.firstChild.innerHTML);
 
   deleteTodoDiv(index);
-
-  var todos = localGetTodos();
-  var newTodos = [];
-
-  for (var i = 0; i < index; i++) newTodos.push(todos[i]);
-  for (var i = index+1; i < todos.length; i++) {
-    newTodos.push(todos[i]);
-    section.children[i-1].children[0].children[0].innerHTML = (i-1);
-  }
-
-  localSetTodos(newTodos);
+  localDeleteTodo(index);
   updateFooter();
 };
 
-var deleteTodoDiv = function(index) {
+var deleteTodoDiv = function(idx) {
+  var index = parseInt(idx);
   var section = document.getElementById("section");
   var containingDiv = section.children[index];
   var form = containingDiv.children[0];
@@ -181,16 +172,23 @@ var deleteTodoDiv = function(index) {
   while(form.firstChild) form.removeChild(form.firstChild);
   containingDiv.removeChild(form);
   section.removeChild(containingDiv);
+
+  var todos = localGetTodos();
+  for (var i = index+1; i < todos.length; i++) {
+    section.children[i-1].children[0].children[0].innerHTML = (i-1);
+  }
 };
 
 var deleteCompleted = function() {
-  console.log(this);
   var section = document.getElementById("section");
   var todos = localGetTodos();
 
   for (var i = 0; i < todos.length; i++) {
     if (todos[i].isCompleted) {
       deleteTodoDiv(i);
+      localDeleteTodo(i);
+      todos = localGetTodos();
+      i--;
     }
   }
 };
@@ -206,6 +204,19 @@ var localGetTodos = function() {
     return JSON.parse(localStorage.getItem("todosArray"));
   }
 };
+
+var localDeleteTodo = function(idx) {
+  var index = parseInt(idx);
+  var todos = localGetTodos();
+  var newTodos = [];
+
+  for (var i = 0; i < index; i++) newTodos.push(todos[i]);
+  for (var i = index+1; i < todos.length; i++) {
+    newTodos.push(todos[i]);
+  }
+
+  localSetTodos(newTodos);
+}
 
 var updateFooter = function() {
   var itemCountSpan = document.getElementById("item-count");
