@@ -2,6 +2,9 @@ var start = function() {
   var newTodoForm = document.getElementById("new-todo-form");
   addEvent(newTodoForm, "submit", submitNewTodo);
 
+  var allCompletedBox = document.getElementById("all-completed");
+  addEvent(allCompletedBox, "change", toggleAllCompleted);
+
   var showAllLink = document.getElementById("show-all");
   addEvent(showAllLink, "click", showAll);
 
@@ -22,6 +25,27 @@ var start = function() {
   }
 
   updateFooter();
+};
+
+var updateAllCompletedBox = function() {
+  var allCompletedBox = document.getElementById("all-completed");
+
+  var todos = localGetTodos() || [];
+  var isAllCompleted = true;
+
+  if (todos.length === 0) isAllCompleted = false;
+  for (var idx = 0; idx < todos.length; idx++) {
+    if (!todos[idx].isCompleted) {
+      isAllCompleted = false;
+      break;
+    }
+  }
+
+  if (isAllCompleted) {
+    allCompletedBox.checked = true;
+  } else {
+    allCompletedBox.checked = false;
+  }
 };
 
 var submitNewTodo = function(event) {
@@ -97,6 +121,9 @@ var addTodoDiv = function(todoText, isCompleted, index) {
 
   var section = document.getElementById("section");
   section.appendChild(divTableWrapper);
+};
+
+var toggleAllCompleted = function() {
 };
 
 var toggleCompletedState = function() {
@@ -256,6 +283,8 @@ var updateFooter = function() {
   } else {
     itemCountSpan.innerHTML = itemCount.toString() + " items left";
   }
+
+  updateAllCompletedBox();
 };
 
 var showAll = function() {
