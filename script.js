@@ -51,16 +51,17 @@ var updateAllCompletedBox = function() {
 var submitNewTodo = function(event) {
   event.preventDefault();
 
-  var newTodoText = document.getElementById("new-todo-text");
-  if (newTodoText.value !== "") {
+  var newTodoInputText = document.getElementById("new-todo-text");
+  var newTodoText = newTodoInputText.value.trim();
+  if (newTodoText !== "") {
     var todos = localGetTodos() || [];
 
-    addTodoDiv(newTodoText.value, false, todos.length);
+    addTodoDiv(newTodoText, false, todos.length);
 
-    todos.push({ text: newTodoText.value, isCompleted: false });
+    todos.push({ text: newTodoText, isCompleted: false });
     localSetTodos(todos);
 
-    newTodoText.value = "";
+    newTodoInputText.value = "";
     updateFooter();
   }
 }
@@ -176,7 +177,7 @@ var editTodo = function() {
   removeEvent(this, "dblclick", editTodo);
   this.setAttribute('draggable', "false");
 
-  this.children[4].style.display = "none";
+  this.lastChild.style.display = "none";
   this.children[3].style.display = "none";
   var inputText = this.children[2];
 
@@ -195,15 +196,19 @@ var loseFocus = function() {
 };
 
 var saveChanges = function(form) {
-  var inputText = form.children[2]
+  var inputText = form.children[2];
+  var index = form.firstChild.innerHTML;
+
+  if (inputText.value.trim() === "") return deleteTodo(index);
+
   inputText.style.display = "none";
 
-  var index = form.firstChild.innerHTML;
   var todos = localGetTodos();
+  inputText.value = inputText.value.trim();
   todos[index].text = inputText.value;
   localSetTodos(todos);
 
-  form.children[4].style.display = "inline";
+  form.lastChild.style.display = "inline";
 
   var todoSpan =  form.children[3]
   todoSpan.innerHTML = inputText.value;
@@ -217,6 +222,10 @@ var saveChanges = function(form) {
 var submitDelete = function() {
   var index = parseInt(this.parentNode.firstChild.innerHTML);
 
+  deleteTodo(index);
+};
+
+var deleteTodo = function(index) {
   deleteTodoDiv(index);
   localDeleteTodo(index);
   updateFooter();
@@ -232,7 +241,7 @@ var deleteTodoDiv = function(idx) {
 
   var todos = localGetTodos();
   for (var i = index+1; i < todos.length; i++) {
-    section.children[i-1].children[0].innerHTML = (i-1);
+    section.children[i-1].firstChild.innerHTML = (i-1);
   }
 };
 
@@ -241,8 +250,7 @@ var deleteCompleted = function() {
 
   for (var i = 0; i < todos.length; i++) {
     if (todos[i].isCompleted) {
-      deleteTodoDiv(i);
-      localDeleteTodo(i);
+      deleteTodo(i);
       todos = localGetTodos();
       i--;
     }
@@ -348,7 +356,7 @@ var showCompleted = function() {
 };
 
 var dragStart = function(event) {
-  event.dataTransfer.setData("index", this.children[0].innerHTML);
+  event.dataTransfer.setData("index", this.firstChild.innerHTML);
   event.dataTransfer.effectAllowed = "move";
 };
 
@@ -363,7 +371,7 @@ var dragDrop = function(event) {
   var todos = localGetTodos();
 
   var sourceIndex = event.dataTransfer.getData("index");
-  var destIndex = this.children[0].innerHTML;
+  var destIndex = this.firstChild.innerHTML;
 
   sourceTodo = todos[sourceIndex];
   todos[sourceIndex] = todos[destIndex];
