@@ -73,7 +73,7 @@ var addTodoDiv = function(todoText, isCompleted, index) {
   var checkbox = document.createElement("input");
   checkbox.setAttribute('type', "checkbox");
 
-  addEvent(checkbox, "change", toggleCompletedState);
+  addEvent(checkbox, "change", submitToggleCompletedState);
 
   var inputText = document.createElement("input");
   inputText.setAttribute('type', "text");
@@ -124,18 +124,37 @@ var addTodoDiv = function(todoText, isCompleted, index) {
 };
 
 var toggleAllCompleted = function() {
+  var allCompletedBox = document.getElementById("all-completed");
+  var todos = localGetTodos() || [];
+
+  if (allCompletedBox.checked) {
+    for (var i = 0; i < todos.length; i++) {
+      if (!todos[i].isCompleted) toggleCompletedState(i);
+    }
+  } else {
+    for (var i = 0; i < todos.length; i++) {
+      if (todos[i].isCompleted) toggleCompletedState(i);
+    }
+  }
 };
 
-var toggleCompletedState = function() {
-  var index = this.parentNode.firstChild.innerHTML;
-  var todoText = this.parentNode.children[3];
+var submitToggleCompletedState = function() {
+  toggleCompletedState(this.parentNode.firstChild.innerHTML);
+};
+
+var toggleCompletedState = function(index) {
+  var form = document.getElementById("section").children[index].children[0];
+  var checkbox = form.children[1];
+  var todoText = form.children[3];
 
   var todos = localGetTodos();
   todos[index].isCompleted = !todos[index].isCompleted;
   if (todos[index].isCompleted) {
     todoText.className = "completed";
+    checkbox.checked = true;
   } else {
     todoText.className = "";
+    checkbox.checked = false;
   }
 
   localSetTodos(todos);
@@ -237,13 +256,13 @@ var deleteCompleted = function() {
 
 var localSetTodos = function(todosArray) {
   if (typeof(Storage) !== "undefined") {
-    return localStorage.setItem("todosArray", JSON.stringify(todosArray));
+    return localStorage.todosArray = JSON.stringify(todosArray);
   }
 };
 
 var localGetTodos = function() {
   if (typeof(Storage) !== "undefined") {
-    return JSON.parse(localStorage.getItem("todosArray"));
+    return JSON.parse(localStorage.todosArray);
   }
 };
 
