@@ -67,7 +67,7 @@ var submitNewTodo = function(event) {
 
 var addTodoDiv = function(todoText, isCompleted, index) {
   var hiddenSpan = document.createElement("span");
-  hiddenSpan.setAttribute('class', "hidden");
+  hiddenSpan.className = "hidden";
   hiddenSpan.innerHTML = index;
 
   var checkbox = document.createElement("input");
@@ -84,17 +84,18 @@ var addTodoDiv = function(todoText, isCompleted, index) {
 
   var todoSpan = document.createElement("span");
   todoSpan.innerHTML = todoText;
+  todoSpan.className = "todo-text vertical-center";
 
   if (isCompleted) {
     checkbox.setAttribute('checked', "checked");
-    todoSpan.className = "completed";
+    todoSpan.className = todoSpan.className + " completed";
   }
 
   var deleteLink = document.createElement("a");
   deleteLink.innerHTML = "✖";
 
   var deleteSpan = document.createElement("span");
-  deleteSpan.setAttribute('class', "delete");
+  deleteSpan.className = "todo-delete vertical-center";
   deleteSpan.appendChild(deleteLink);
 
   addEvent(deleteSpan, "click", submitDelete);
@@ -145,10 +146,10 @@ var toggleCompletedState = function(index) {
   var todos = localGetTodos();
   todos[index].isCompleted = !todos[index].isCompleted;
   if (todos[index].isCompleted) {
-    todoText.className = "completed";
+    todoText.className = todoText.className + " completed";
     checkbox.checked = true;
   } else {
-    todoText.className = "";
+    todoText.className = "todo-text vertical-center";
     checkbox.checked = false;
   }
 
@@ -256,7 +257,7 @@ var localSetTodos = function(todosArray) {
 
 var localGetTodos = function() {
   if (typeof(Storage) !== "undefined") {
-    return JSON.parse(localStorage.todosArray);
+    return JSON.parse(localStorage.getItem("todosArray"));
   }
 };
 
@@ -386,10 +387,9 @@ var updateTodoDivOrder = function(index) {
   checkbox.checked = todos[index].isCompleted;
   inputText.setAttribute('value', todoText);
   spanText.innerHTML = todoText;
-  if (todos[index].isCompleted){
-    spanText.className = "completed";
-  } else {
-    spanText.className = "";
+  spanText.className = "todo-text vertical-center";
+  if (todos[index].isCompleted) {
+    spanText.className = spanText.className + " completed";
   }
 };
 

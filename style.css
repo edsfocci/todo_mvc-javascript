@@ -7,7 +7,7 @@ body {
 
 h1 {
   margin: 0;
-  line-height: 135px;
+  margin-top: 5px;
   font-size: 100px;
   font-weight: normal;
   text-align: center;
@@ -18,7 +18,6 @@ h1 {
 #todo-app {
   width: 550px;
   margin: auto;
-  margin-top: -5px;
   background-color: white;
 }
 
@@ -26,16 +25,8 @@ h1 {
   border: 1px solid grey;
   border-bottom: 0;
   width: 100%;
-  line-height: 60px;
+  height: 60px;
   display: block;
-}
-
-#todo-app header form {
-  line-height: 55px;
-}
-
-#todo-app header form input[type=text] {
-  margin-top: 13px;
 }
 
 #todo-app section {
@@ -48,13 +39,23 @@ h1 {
 
 input[type=checkbox] {
   float: left;
-  margin: 23px 13px;
+  margin: 22px 13px 0;
 }
 
 input[type=text] {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
   border: none;
+  background-color: white;
   font-size: 25px;
   width: 500px;
+}
+
+.todo-text {
+  float: left;
+  width: 475px;
+  word-wrap: break-word;
 }
 
 .completed {
@@ -62,13 +63,13 @@ input[type=text] {
   color: #cccccc;
 }
 
-.delete {
+.todo-delete {
   float: right;
   margin-right: 10px;
   display: none;
 }
 
-.delete a {
+.todo-delete a {
   color: #e88080;
 }
 
@@ -83,19 +84,16 @@ input[type=text] {
 .footer-left {
   float: left;
   width: 135px;
-  line-height: 40px;
-  padding-left: 15px;
+  margin-left: 15px;
 }
 
 .footer-center {
   float: left;
   width: 250px;
-  line-height: 40px;
 }
 
 .footer-right {
   float: right;
-  line-height: 40px;
   text-align: right;
   margin-right: 15px;
 }
@@ -118,6 +116,12 @@ body > footer {
 .active {
   border: 1px solid #e8a8a8;
   border-radius: 3px;
+}
+
+.vertical-center {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .center {
