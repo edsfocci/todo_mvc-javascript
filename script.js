@@ -90,14 +90,17 @@ var addTodoDiv = function(todoText, isCompleted, index) {
     todoSpan.className = "completed";
   }
 
+  var deleteLink = document.createElement("a");
+  deleteLink.innerHTML = "✖";
+
   var deleteSpan = document.createElement("span");
   deleteSpan.setAttribute('class', "delete");
-  deleteSpan.innerHTML = "✖";
+  deleteSpan.appendChild(deleteLink);
 
   addEvent(deleteSpan, "click", submitDelete);
 
   var form = document.createElement("form");
-  form.setAttribute('class', "table-cell-wrapper");
+  form.setAttribute('draggable', "true");
   form.appendChild(hiddenSpan);
   form.appendChild(checkbox);
   form.appendChild(inputText);
@@ -108,19 +111,11 @@ var addTodoDiv = function(todoText, isCompleted, index) {
   addEvent(form, "submit", submitInEditMode);
   addEvent(form, "mouseover", showDeleteSpan);
   addEvent(form, "mouseout", hideDeleteSpan);
-
-  var divTableWrapper = document.createElement("div");
-  divTableWrapper.setAttribute('class', "table-wrapper");
-  divTableWrapper.setAttribute('draggable', "true");
-
-  addEvent(divTableWrapper, "dragstart", dragStart);
-  addEvent(divTableWrapper, "dragover", dragOver);
-  addEvent(divTableWrapper, "drop", dragDrop);
-
-  divTableWrapper.appendChild(form);
-
+  addEvent(form, "dragstart", dragStart);
+  addEvent(form, "dragover", dragOver);
+  addEvent(form, "drop", dragDrop);
   var section = document.getElementById("section");
-  section.appendChild(divTableWrapper);
+  section.appendChild(form);
 };
 
 var toggleAllCompleted = function() {
@@ -143,7 +138,7 @@ var submitToggleCompletedState = function() {
 };
 
 var toggleCompletedState = function(index) {
-  var form = document.getElementById("section").children[index].children[0];
+  var form = document.getElementById("section").children[index];
   var checkbox = form.children[1];
   var todoText = form.children[3];
 
@@ -164,7 +159,7 @@ var toggleCompletedState = function(index) {
 
 var showDeleteSpan = function() {
   var deleteSpan = this.lastChild;
-  if (this.className === "table-cell-wrapper edit-mode") {
+  if (this.className === "edit-mode") {
     deleteSpan.style.display = "none";
   } else {
     deleteSpan.style.display = "inline";
@@ -176,15 +171,16 @@ var hideDeleteSpan = function() {
   deleteSpan.style.display = "none";
 };
 
-var editTodo = function(event) {
+var editTodo = function() {
   removeEvent(this, "dblclick", editTodo);
+  this.setAttribute('draggable', "false");
 
   this.children[4].style.display = "none";
   this.children[3].style.display = "none";
   var inputText = this.children[2];
 
   inputText.style.display = "inline";
-  this.className = this.className + " edit-mode";
+  this.className = "edit-mode";
   inputText.focus();
 };
 
@@ -213,7 +209,8 @@ var saveChanges = function(form) {
   todoSpan.style.display = "inline";
 
   addEvent(form, "dblclick", editTodo);
-  form.className = "table-cell-wrapper";
+  form.className = "";
+  form.setAttribute('draggable', "true");
 };
 
 var submitDelete = function() {
@@ -227,21 +224,18 @@ var submitDelete = function() {
 var deleteTodoDiv = function(idx) {
   var index = parseInt(idx);
   var section = document.getElementById("section");
-  var containingDiv = section.children[index];
-  var form = containingDiv.children[0];
+  var form = section.children[index];
 
   while(form.firstChild) form.removeChild(form.firstChild);
-  containingDiv.removeChild(form);
-  section.removeChild(containingDiv);
+  section.removeChild(form);
 
   var todos = localGetTodos();
   for (var i = index+1; i < todos.length; i++) {
-    section.children[i-1].children[0].children[0].innerHTML = (i-1);
+    section.children[i-1].children[0].innerHTML = (i-1);
   }
 };
 
 var deleteCompleted = function() {
-  var section = document.getElementById("section");
   var todos = localGetTodos();
 
   for (var i = 0; i < todos.length; i++) {
@@ -312,7 +306,7 @@ var showAll = function() {
 
   for (var i = 0; i < todos.length; i++)
   {
-    section.children[i].style.display = "table";
+    section.children[i].style.display = "block";
   }
 
   document.getElementById("show-all").className = "active";
@@ -328,7 +322,7 @@ var showActive = function() {
     if (todos[i].isCompleted) {
       section.children[i].style.display = "none";
     } else {
-      section.children[i].style.display = "table";
+      section.children[i].style.display = "block";
     }
 
   document.getElementById("show-all").className = "";
@@ -342,7 +336,7 @@ var showCompleted = function() {
 
   for (var i = 0; i < todos.length; i++)
     if (todos[i].isCompleted) {
-      section.children[i].style.display = "table";
+      section.children[i].style.display = "block";
     } else {
       section.children[i].style.display = "none";
     }
@@ -353,7 +347,7 @@ var showCompleted = function() {
 };
 
 var dragStart = function(event) {
-  event.dataTransfer.setData("index", this.children[0].children[0].innerHTML);
+  event.dataTransfer.setData("index", this.children[0].innerHTML);
   event.dataTransfer.effectAllowed = "move";
 };
 
@@ -368,7 +362,7 @@ var dragDrop = function(event) {
   var todos = localGetTodos();
 
   var sourceIndex = event.dataTransfer.getData("index");
-  var destIndex = this.children[0].children[0].innerHTML;
+  var destIndex = this.children[0].innerHTML;
 
   sourceTodo = todos[sourceIndex];
   todos[sourceIndex] = todos[destIndex];
@@ -376,15 +370,15 @@ var dragDrop = function(event) {
 
   localSetTodos(todos);
 
-  updateTodoDiv(sourceIndex);
-  updateTodoDiv(destIndex);
+  updateTodoDivOrder(sourceIndex);
+  updateTodoDivOrder(destIndex);
 };
 
-var updateTodoDiv = function(index) {
+var updateTodoDivOrder = function(index) {
   var todos = localGetTodos();
   var todoText = todos[index].text;
 
-  var form = document.getElementById("section").children[index].children[0];
+  var form = document.getElementById("section").children[index];
   var checkbox = form.children[1];
   var inputText = form.children[2];
   var spanText = form.children[3];

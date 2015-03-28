@@ -22,18 +22,20 @@ h1 {
   background-color: white;
 }
 
-#todo-app header, #todo-app footer, div.table-wrapper {
+#todo-app header form, #todo-app section form {
   border: 1px solid grey;
   border-bottom: 0;
-  height: 60px;
   width: 100%;
-  display: table;
-  vertical-align: middle;
+  line-height: 60px;
+  display: block;
 }
 
-.table-cell-wrapper {
-  display: table-cell;
-  vertical-align: middle;
+#todo-app header form {
+  line-height: 55px;
+}
+
+#todo-app header form input[type=text] {
+  margin-top: 13px;
 }
 
 #todo-app section {
@@ -46,7 +48,7 @@ h1 {
 
 input[type=checkbox] {
   float: left;
-  margin: 9px 13px;
+  margin: 23px 13px;
 }
 
 input[type=text] {
@@ -63,14 +65,17 @@ input[type=text] {
 .delete {
   float: right;
   margin-right: 10px;
-  color: #e88080;
   display: none;
-  cursor: pointer;
+}
+
+.delete a {
+  color: #e88080;
 }
 
 #todo-app footer {
-  border-bottom: 1px solid grey;
+  border: 1px solid grey;
   height: 40px;
+  width: 100%;
   font-size: 14px;
   color: #707070;
 }
@@ -98,12 +103,16 @@ input[type=text] {
 #todo-app footer span.footer-center a {
   padding: 3px 7px;
   margin: 0 5px;
-  text-decoration: none;
-  color: #707070;
+#  text-decoration: none;
+#  color: #707070;
 }
 
 a {
   cursor: pointer;
+}
+
+body > footer {
+  margin-top: 10px;
 }
 
 .active {
