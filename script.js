@@ -1,3 +1,5 @@
+"use strict";
+
 var start = function() {
   var newTodoForm = document.getElementById("new-todo-form");
   addEvent(newTodoForm, "submit", submitNewTodo);
@@ -373,7 +375,7 @@ var dragDrop = function(event) {
   var sourceIndex = event.dataTransfer.getData("index");
   var destIndex = this.firstChild.innerHTML;
 
-  sourceTodo = todos[sourceIndex];
+  var sourceTodo = todos[sourceIndex];
   todos[sourceIndex] = todos[destIndex];
   todos[destIndex] = sourceTodo;
 
